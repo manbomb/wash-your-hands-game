@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WashYourHands</title>
+		<link rel="stylesheet" type="text/css" href="index_style.css?v=2">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+		<script type="text/javascript">
+
+			pause = true;
+			som = false;
+
+			var width = screen.width;
+
+			function getRandomInt(min, max) {
+				min = Math.ceil(min);
+				max = Math.floor(max);
+				return Math.floor(Math.random() * (max - min)) + min;
+			} 
+
+			function criar_virus() {
+				if (pause == false) {
+					type = getRandomInt(1,3);
+					position = getRandomInt(0,19);
+					life = getRandomInt(10,21);
+
+					body = document.body;
+					body.innerHTML += '<div class="virus" style="background-image: url(images/virus'+type+'.png);background-size: 100%;background-repeat: no-repeat;width: 5vw;height: 5vw;position: fixed;top:'+String(position*5)+'vh;" data-life="'+String(life)+'" onclick="punch(this)" data-life-ini="'+String(life)+'"></div>';
+				}
+			}
+
+			function winAud() {
+				var sound = document.getElementById("audiowin");
+				sound.play()
+			}
+			function lossAud() {
+				var sound = document.getElementById("audioloss");
+				sound.play()
+			}
+
+			function loss() {
+				span = document.getElementById('pontos');
+				pts  = parseInt(span.innerText);
+				span.innerText = String(pts-1);
+				if (som == true) {
+					lossAud();
+				}
+			}
+
+			function win() {
+				span = document.getElementById('pontos');
+				pts  = parseInt(span.innerText);
+				span.innerText = String(pts+1);
+				if (som == true) {
+					winAud();
+				}
+			}
+
+			function dec_opacity(obj) {
+				life = obj.getAttribute('data-life-ini');
+				dopc = 1/(life*2);
+				opc = obj.style.opacity;
+				if (opc == '') {
+					opc = 1;
+				}
+				obj.style.opacity = opc - dopc;
+			}
+
+			function punch(obj) {
+				if (pause == false) {
+					life = obj.getAttribute('data-life');
+
+					if (life == 1) {
+						obj.style.display = 'none';
+						obj.className = '';
+						win();
+					} else {
+						obj.setAttribute('data-life', life-1);
+						dec_opacity(obj);
+					}
+				}
+
+			}
+
+			function movimento() {
+				if (pause == false) {
+					virus = document.getElementsByClassName('virus');
+					for (var i = virus.length - 1; i >= 0; i--) {
+						space = virus[i].style.left;
+
+						if (space == "") {
+							space = 0;
+						}
+
+						space = parseInt(space);
+						virus[i].style.left = String(space+10)+'px';
+
+						if (space+10 >= width) {
+							console.log('Perdeu mais um !');
+							loss();
+							virus[i].style.display = 'none';
+							virus[i].className = '';
+						}
+
+					}
+				}
+			}
+
+			function start() {
+				pause = false;
+				document.getElementById('start_div').style.display = 'none';
+				document.getElementById('pause_btt').src = 'images/pause.png';
+			}
+
+			function pause_fun() {
+				pause = true;
+				document.getElementById('start_div').style.display = 'block';
+				document.getElementById('pause_btt').src = 'images/play.png';
+			}
+
+			function som_fun() {
+				btt = document.getElementById('som_mudo');
+				if (btt.src.match('mudo.png')) {
+					btt.src = 'images/som.png';
+					winAud();
+					som = true;
+				} else {
+					btt.src = 'images/mudo.png';
+					som = false;
+				}
+			}
+
+			$(document).mousemove(function(e){
+				x = e.pageX - 25;
+				y = e.pageY - 25;
+				$("#cursor_mouse").css({left:x, top:y});
+			});
+
+			setInterval(function(){ criar_virus(); }, 3000);
+			setInterval(function(){ movimento(); }, 100);
+
+		</script>
+	</head>
+	<body>
+		<span id="pontos">0</span>
+		<div id="audio">
+			<audio id="audiowin" src="win.wav" autostart="false" ></audio>
+			<audio id="audioloss" src="loss.wav" autostart="false" ></audio>
+		</div>
+		<img src="images/soap.png" id="cursor_mouse">
+		<img src="images/mudo.png" id="som_mudo" onclick="som_fun()">
+		<img src="images/play.png" id="pause_btt" onclick="pause_fun()">
+		<div id="start_div">
+			<h1>Wash Your Hands</h1>
+			<span>Este jogo foi criado com o intuíto de ser algo lúdico para ensinar a importancia de se lavar as mãos para as crianças. Espero que se divirtam. #COVID19</span><br>
+			<input type="button" id="start_btt" onclick="start()" value="COMEÇAR">
+		</div>
+	</body>
+</html>
