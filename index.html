@@ -10,6 +10,8 @@
 			som = false;
 
 			var width = screen.width;
+			var mouseDown = 0;
+			var gap = 6;
 
 			function getRandomInt(min, max) {
 				min = Math.ceil(min);
@@ -21,10 +23,10 @@
 				if (pause == false) {
 					type = getRandomInt(1,3);
 					position = getRandomInt(0,19);
-					life = getRandomInt(10,21);
+					life = getRandomInt(5,11);
 
 					body = document.body;
-					body.innerHTML += '<div class="virus" style="background-image: url(images/virus'+type+'.png);background-size: 100%;background-repeat: no-repeat;width: 5vw;height: 5vw;position: fixed;top:'+String(position*5)+'vh;" data-life="'+String(life)+'" onclick="punch(this)" data-life-ini="'+String(life)+'"></div>';
+					body.innerHTML += '<div class="virus" style="background-image: url(images/virus'+type+'.png);background-size: 100%;background-repeat: no-repeat;width: 5vw;height: 5vw;position: fixed;top:'+String(position*5)+'vh;" data-life="'+String(life)+'" onmouseover="punch(this)" data-life-ini="'+String(life)+'"></div>';
 				}
 			}
 
@@ -36,20 +38,37 @@
 				var sound = document.getElementById("audioloss");
 				sound.play()
 			}
+			function soapAudPlay() {
+				var sound = document.getElementById("audiosoap");
+				sound.loop = true;
+				sound.play()
+			}
+			function soapAudPause() {
+				var sound = document.getElementById("audiosoap");
+				sound.pause()
+			}
 
-			function loss() {
+			function loss(obj) {
 				span = document.getElementById('pontos');
 				pts  = parseInt(span.innerText);
-				span.innerText = String(pts-1);
+
+				vida = obj.getAttribute('data-life-ini');
+				vida = parseInt(vida);
+
+				span.innerText = String(pts-vida);
 				if (som == true) {
 					lossAud();
 				}
 			}
 
-			function win() {
+			function win(obj) {
 				span = document.getElementById('pontos');
 				pts  = parseInt(span.innerText);
-				span.innerText = String(pts+1);
+
+				vida = obj.getAttribute('data-life-ini');
+				vida = parseInt(vida);
+
+				span.innerText = String(pts+vida);
 				if (som == true) {
 					winAud();
 				}
@@ -66,13 +85,13 @@
 			}
 
 			function punch(obj) {
-				if (pause == false) {
+				if (pause == false && mouseDown == 1) {
 					life = obj.getAttribute('data-life');
 
 					if (life == 1) {
 						obj.style.display = 'none';
 						obj.className = '';
-						win();
+						win(obj);
 					} else {
 						obj.setAttribute('data-life', life-1);
 						dec_opacity(obj);
@@ -92,11 +111,11 @@
 						}
 
 						space = parseInt(space);
-						virus[i].style.left = String(space+10)+'px';
+						virus[i].style.left = String(space+gap)+'px';
 
-						if (space+10 >= width) {
+						if (space+gap >= width) {
 							console.log('Perdeu mais um !');
-							loss();
+							loss(virus[i]);
 							virus[i].style.display = 'none';
 							virus[i].className = '';
 						}
@@ -129,6 +148,15 @@
 				}
 			}
 
+			function increVelocity() {
+				if (pause == false) {
+					if (gap < 20) {
+						gap += 1;
+					}
+					console.log('Velocidade: '+String(gap))
+				}
+			}
+
 			$(document).mousemove(function(e){
 				x = e.pageX - 25;
 				y = e.pageY - 25;
@@ -137,6 +165,7 @@
 
 			setInterval(function(){ criar_virus(); }, 3000);
 			setInterval(function(){ movimento(); }, 100);
+			setInterval(function(){ increVelocity(); }, 10000);
 
 		</script>
 	</head>
@@ -145,6 +174,7 @@
 		<div id="audio">
 			<audio id="audiowin" src="win.wav" autostart="false" ></audio>
 			<audio id="audioloss" src="loss.wav" autostart="false" ></audio>
+			<audio id="audiosoap" src="soap.mp3" autostart="false" ></audio>
 		</div>
 		<img src="images/soap.png" id="cursor_mouse">
 		<img src="images/mudo.png" id="som_mudo" onclick="som_fun()">
@@ -156,3 +186,13 @@
 		</div>
 	</body>
 </html>
+<script type="text/javascript">
+	document.onmousedown = function() { 
+		++mouseDown;
+		//soapAudPlay();
+	}
+	document.onmouseup = function() {
+		--mouseDown;
+		//soapAudPause();
+	}
+</script>
