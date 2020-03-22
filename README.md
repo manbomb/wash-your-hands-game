@@ -4,9 +4,9 @@ Este jogo foi criado com o intuito de ser algo lúdico para as crianças aprende
 
 ## Futuras melhorias
 
-- A velocidade poderia começar baixa, e ir gradando aos poucos, até chegar a um limite.
-- A quantidade de pontos ganhos poderia ser proporcional à vida do 'vírus', um 'vírus' com 25 de vida, rende 25 pontos, e assim por diante.
-- Ao invés de contar quantos clicks o usuário dá em cada 'vírus', ele poderia contar o tempo que o user passa com o mouse 'clickado' sobre ele, algo como esfregando o 'vírus'.
+- ~~A velocidade poderia começar baixa, e ir gradando aos poucos, até chegar a um limite.~~
+- ~~A quantidade de pontos ganhos poderia ser proporcional à vida do 'vírus', um 'vírus' com 25 de vida, rende 25 pontos, e assim por diante.
+- ~~Ao invés de contar quantos clicks o usuário dá em cada 'vírus', ele poderia contar o tempo que o user passa com o mouse 'clickado' sobre ele, algo como esfregando o 'vírus'.
 - Enquanto o botão esquerdo do mouse estivesse pressionado, um som de água ou sabão ficasse rodando no fundo.
 - Melhorar os gráficos do jogo, apesar do nome ser: Wash Your HANDS. O jogo não possui nenhuma lembrança visual que remeta às mãos.
 
